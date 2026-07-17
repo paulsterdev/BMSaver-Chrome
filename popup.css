@@ -1,0 +1,21 @@
+html{
+    padding: 1.25rem;
+    border-radius: 20%
+}
+
+h1{
+    text-align:left;
+    font-size: 1.25rem;
+}
+body{
+    align-items: left;
+}
+
+div{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}

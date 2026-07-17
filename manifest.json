@@ -1,0 +1,13 @@
+{
+    "name": "BMSaver",
+    "version": "0.1",
+    "description": "Save bookmarks quickly without visiting webpages",
+    "author": "paulster",
+    "manifest_version": 3,
+    "permissions": 
+        ["bookmarks"],
+    "action":
+    {
+        "default_popup": "popup.html"
+    }
+}
