@@ -1,6 +1,6 @@
 html{
     padding: 1.25rem;
-    border-radius: 20%
+    border-radius: 50%
 }
 
 h1{
@@ -18,4 +18,8 @@ div{
     gap: 0.8rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+}
+
+button{
+    border-radius: 35%;
 }
