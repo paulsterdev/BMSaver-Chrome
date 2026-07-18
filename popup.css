@@ -8,6 +8,7 @@ h1{
     font-size: 1.25rem;
 }
 body{
+    background: none;
     align-items: left;
 }
 
@@ -18,8 +19,21 @@ div{
     gap: 0.8rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+    font-size: 1.125rem;
 }
 
 button{
-    border-radius: 35%;
+    border: 1px solid white;
+    border-radius: 10rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: #0059AD;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+button:hover{
+    background-color: #0071db;
 }
