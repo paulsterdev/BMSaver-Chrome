@@ -22,17 +22,15 @@ function updateFolders(bookmarkItem)
 {
     if (!(bookmarkItem.url) && (bookmarkItem.title))
     {
-        folderTitle += (folderStructure + bookmarkItem.title);
-        folderTitles.push(folderTitle);
+        if(bookmarkItem.title == "Other Bookmarks" ||bookmarkItem.title == "Bookmarks Bar")
+        {
+            folderTitle = bookmarkItem.title;
+        }
     }
   if (bookmarkItem.children) 
     {
     for (const child of bookmarkItem.children) 
     {
-    if (!(bookmarkItem.url) && (bookmarkItem.title))
-        {
-            folderStructure += `/${bookmarkItem.title}`;
-        }
       updateFolders(child);
     }
     }
