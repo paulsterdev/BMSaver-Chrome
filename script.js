@@ -37,7 +37,7 @@ function updateFolders(bookmarkItem)
         }
         if (parentFolderFound)
         {
-            folderName = (folderName[folderIDsIndex] + "/" + bookmarkItem.title);
+            folderName = (folderNames[folderIDsIndex] + "/" + bookmarkItem.title);
         }
         else
         {
