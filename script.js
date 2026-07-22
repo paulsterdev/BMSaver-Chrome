@@ -6,7 +6,10 @@ const folderSelector = document.getElementById("folderSelector")
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
 
-const folderTitles = [];
+const folderNames = [];
+const folderIDs = [];
+let folderID = "";
+let folderName = ``;
 
 
 
@@ -15,30 +18,42 @@ function handleError(error)
     console.error(`Error occured: ${error}`);
 }
 
-let folderStructure = ``;
-let folderTitle = ``;
-
 function updateFolders(bookmarkItem) 
 {
     if (!(bookmarkItem.url) && (bookmarkItem.title))
     {
-        if(bookmarkItem.title == "Other Bookmarks" ||bookmarkItem.title == "Bookmarks Bar")
+        folderID = bookmarkItem.id;
+        folderIDs.push(folderID);
+        let folderName = ``;
+        let parentFolderFound = false;
+        let folderIDsIndex = 0;
+        for (const index of folderIDs)
         {
-            folderTitle = bookmarkItem.title;
+            if (folderIDs[index] == bookmarkItem.parentId)
+            {
+                parentFolderFound = true;
+                folderIDsIndex = index;
+            }
+        }
+        if (parentFolderFound)
+        {
+            folderName = (folderName[folderIDsIndex] + "/" + bookmarkItem.title);
+        }
+        else
+        {
+            folderName = bookmarkItem.title;
+        }
+        folderNames.push(folderName);
+    }
+    if (bookmarkItem.children)
+    {
+        for (const child of bookmarkItem.children) 
+        {
+            updateFolders(child);
         }
     }
-  if (bookmarkItem.children) 
-    {
-    for (const child of bookmarkItem.children) 
-    {
-      updateFolders(child);
-    }
-    }
-    else if (!(bookmarkItem.children))
-    {
-        folderStructure = ``;
-    }
-}
+    
+    }  
 
 function getItems(bookmarkItems) 
 {
@@ -47,4 +62,5 @@ function getItems(bookmarkItems)
 
 let BMObject = chrome.bookmarks.getTree();
 BMObject.then(getItems, handleError);
-console.log(folderTitles);
+console.log(folderNames);
+console.log(folderIDs);
