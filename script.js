@@ -2,7 +2,7 @@
 
 const nameField = document.getElementById("nameField");
 const urlField = document.getElementById("urlField");
-const folderSelector = document.getElementById("folderSelector")
+const folderSelector = document.getElementById("folderSelectorMenu")
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
 
@@ -27,12 +27,17 @@ function updateFolders(bookmarkItem)
         let folderName = ``;
         let parentFolderFound = false;
         let folderIDsIndex = 0;
-        for (const index of folderIDs)
+
+        console.log(`FOR ${bookmarkItem.title}`);
+        for (let index = 0; index < folderIDs.length; index++)
         {
+            console.log(folderIDs[index]);
+            console.log(bookmarkItem.parentId);
             if (folderIDs[index] == bookmarkItem.parentId)
             {
                 parentFolderFound = true;
                 folderIDsIndex = index;
+                break;
             }
         }
         if (parentFolderFound)
@@ -64,3 +69,27 @@ let BMObject = chrome.bookmarks.getTree();
 BMObject.then(getItems, handleError);
 console.log(folderNames);
 console.log(folderIDs);
+
+selectItemsHTML = ``;
+
+for (var index = 0; index < folderIDs.length; index++)
+{
+    selectItemsHTML += 
+    `<option value="${folderIDs[index]}">${folderNames[index]}</option>`
+}
+
+if (document.getElementById("folderSelectorMenu"))
+{
+    console.log("Element found.")
+}
+
+folderSelector.innerHTML = 
+`
+    <label for="folderSelector">Folder:</label>
+        <select
+        name="folder"
+        id="folder">
+        ${selectItemsHTML}
+        </select>
+`;
+
