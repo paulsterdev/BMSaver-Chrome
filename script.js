@@ -8,8 +8,9 @@ const clearButton = document.getElementById("clearButton");
 
 const folderNames = [];
 const folderIDs = [];
-let folderID = "";
-let folderName = ``;
+var folderID = "";
+var folderName = ``;
+var selectItemsHTML = ``;
 
 
 
@@ -22,17 +23,14 @@ function updateFolders(bookmarkItem)
 {
     if (!(bookmarkItem.url) && (bookmarkItem.title))
     {
-        folderID = bookmarkItem.id;
+        folderID = bookmarkItem.id.toString();
         folderIDs.push(folderID);
-        let folderName = ``;
+        let folderName = "";
         let parentFolderFound = false;
         let folderIDsIndex = 0;
 
-        console.log(`FOR ${bookmarkItem.title}`);
         for (let index = 0; index < folderIDs.length; index++)
         {
-            console.log(folderIDs[index]);
-            console.log(bookmarkItem.parentId);
             if (folderIDs[index] == bookmarkItem.parentId)
             {
                 parentFolderFound = true;
@@ -42,13 +40,15 @@ function updateFolders(bookmarkItem)
         }
         if (parentFolderFound)
         {
-            folderName = (folderNames[folderIDsIndex] + "/" + bookmarkItem.title);
+            folderName = (folderNames[folderIDsIndex] + "/" + (bookmarkItem.title.toString()));
         }
         else
         {
-            folderName = bookmarkItem.title;
+            folderName = bookmarkItem.title.toString();
         }
         folderNames.push(folderName);
+
+        
     }
     if (bookmarkItem.children)
     {
@@ -65,25 +65,14 @@ function getItems(bookmarkItems)
   updateFolders(bookmarkItems[0]);
 }
 
-let BMObject = chrome.bookmarks.getTree();
-BMObject.then(getItems, handleError);
-console.log(folderNames);
-console.log(folderIDs);
-
-selectItemsHTML = ``;
-
-for (var index = 0; index < folderIDs.length; index++)
-{
+function writeHTML(){
+    for (var i = 0; i < folderNames.length; i++)
+    {
     selectItemsHTML += 
-    `<option value="${folderIDs[index]}">${folderNames[index]}</option>`
-}
-
-if (document.getElementById("folderSelectorMenu"))
-{
-    console.log("Element found.")
-}
-
-folderSelector.innerHTML = 
+    `<option value="${folderIDs[i]}">${folderNames[i]}</option>
+    `
+    }
+    folderSelector.innerHTML = 
 `
     <label for="folderSelector">Folder:</label>
         <select
@@ -92,4 +81,16 @@ folderSelector.innerHTML =
         ${selectItemsHTML}
         </select>
 `;
+}
+
+let BMObject = chrome.bookmarks.getTree();
+BMObject.then(getItems, handleError)
+        .then(writeHTML,handleError);
+
+
+
+
+
+console.log(selectItemsHTML)
+
 
