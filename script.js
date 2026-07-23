@@ -83,11 +83,44 @@ function writeHTML(){
 `;
 }
 
+function addBookmark(parentId, title, url)
+{
+    console.log(parentId)
+    chrome.bookmarks.create(
+    {
+        'parentId': parentId,
+        'title': title,
+        'url': url,
+    } 
+    )
+}
+
+function controlFields()
+{
+    const folderOptions = document.getElementById("folder");
+    saveButton.addEventListener("click", () => 
+    {
+        var title = nameField.value;
+        var url = urlField.value;
+        var parentId = folderOptions.value;
+        addBookmark(parentId, title, url)
+    }
+    )
+
+    clearButton.addEventListener("click", () => 
+    {
+        nameField.value = "";
+        urlField.value = "";
+        folderOptions.selectedIndex = 0;
+        controlFields()
+    }
+    )
+}
+
 let BMObject = chrome.bookmarks.getTree();
 BMObject.then(getItems, handleError)
-        .then(writeHTML,handleError);
-
-
+        .then(writeHTML,handleError)
+        .then(controlFields, handleError);
 
 
 
