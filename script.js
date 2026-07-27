@@ -74,7 +74,7 @@ function writeHTML(){
     }
     folderSelector.innerHTML = 
 `
-    <label for="folderSelector">Folder:</label>
+    <label for="folderSelector">FOLDER:</label>
         <select
         name="folder"
         id="folder">
