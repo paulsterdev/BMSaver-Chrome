@@ -40,11 +40,11 @@ function updateFolders(bookmarkItem)
         }
         if (parentFolderFound)
         {
-            folderName = (folderNames[folderIDsIndex] + "/" + (bookmarkItem.title.toString()));
+            folderName = (folderNames[folderIDsIndex] + "/" + (bookmarkItem.title.toString().toUpperCase()));
         }
         else
         {
-            folderName = bookmarkItem.title.toString();
+            folderName = bookmarkItem.title.toString().toUpperCase();
         }
         folderNames.push(folderName);
 
