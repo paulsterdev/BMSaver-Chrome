@@ -19,7 +19,6 @@
 html{
     font-family: "VCR-OSD-Mono";
     padding: 1.25rem;
-    border-radius: 50%;
     background-color: var(--main-bg-color);
 }
 
