@@ -5,6 +5,7 @@ const urlField = document.getElementById("urlField");
 const folderSelector = document.getElementById("folderSelectorMenu")
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
+const message = document.getElementById("error");
 
 const folderNames = [];
 const folderIDs = [];
@@ -85,6 +86,7 @@ function writeHTML(){
 
 function addBookmark(parentId, title, url)
 {
+    clearError();
     console.log(parentId)
     chrome.bookmarks.create(
     {
@@ -93,26 +95,65 @@ function addBookmark(parentId, title, url)
         'url': url,
     } 
     )
+    controlFields();
+}
+
+function handleEmpty(errorText, field)
+{
+    message.innerHTML = `${errorText}`;
+}
+
+function clearError()
+{
+    message.innerHTML = ``;
+    nameField.style.border = "1px solid black";
+    urlField.style.border = "1px solid black";
 }
 
 function controlFields()
 {
+    console.log("In controlfields()")
     const folderOptions = document.getElementById("folder");
     saveButton.addEventListener("click", () => 
     {
         var title = nameField.value;
         var url = urlField.value;
         var parentId = folderOptions.value;
-        addBookmark(parentId, title, url)
+        if(!title || !url)
+        {
+            if (!title && !url)
+            {
+                nameField.style.border = "1px solid red";
+                urlField.style.border = "1px solid red";
+                handleEmpty("NAME AND URL CANNOT BE BLANK.", "both")
+            }
+            else if(!title)
+            {
+                nameField.style.border = "1px solid red";
+                handleEmpty("NAME CANNOT BE BLANK.", "name");
+            }
+            else if(!url)
+            {
+                handleEmpty("URL CANNOT BE BLANK.", "url");
+                urlField.style.border = "1px solid red";
+            }
+
+        }
+        else
+        {
+            addBookmark(parentId, title, url);
+        }
+        
     }
     )
 
     clearButton.addEventListener("click", () => 
     {
+        clearError();
         nameField.value = "";
         urlField.value = "";
         folderOptions.selectedIndex = 0;
-        controlFields()
+        controlFields();
     }
     )
 }

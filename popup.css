@@ -67,6 +67,11 @@ div{
     gap: 0.1rem;
 }
 
+.errorMessage{
+    font-size: 0.8rem;
+    color: red;
+}
+
 input{
     font-family: "Times-New-Roman","sans-serif";
     background-color: var(--main-bg-color);
