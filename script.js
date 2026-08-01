@@ -88,19 +88,28 @@ function addBookmark(parentId, title, url)
 {
     clearError();
     console.log(parentId)
-    chrome.bookmarks.create(
-    {
-        'parentId': parentId,
-        'title': title,
-        'url': url,
-    } 
-    )
-    controlFields();
+    let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
+    newBookmark.catch(error => catchError(error));
 }
 
-function handleEmpty(errorText, field)
+function displayMessage(errorText, messageColor)
 {
+    message.style.color = messageColor;
     message.innerHTML = `${errorText}`;
+}
+
+function catchError(error)
+{
+    if (error == "Error: Invalid URL.")
+    {
+        console.log(error)
+        urlField.style.border = "1px solid red";
+        displayMessage("INVALID URL FORMAT.", "red");
+    }
+    else
+    {
+        console.log(error);
+    }
 }
 
 function clearError()
@@ -125,16 +134,16 @@ function controlFields()
             {
                 nameField.style.border = "1px solid red";
                 urlField.style.border = "1px solid red";
-                handleEmpty("NAME AND URL CANNOT BE BLANK.", "both")
+                displayMessage("NAME AND URL CANNOT BE BLANK.", "red")
             }
             else if(!title)
             {
                 nameField.style.border = "1px solid red";
-                handleEmpty("NAME CANNOT BE BLANK.", "name");
+                displayMessage("NAME CANNOT BE BLANK.", "red");
             }
             else if(!url)
             {
-                handleEmpty("URL CANNOT BE BLANK.", "url");
+                displayMessage("URL CANNOT BE BLANK.", "red");
                 urlField.style.border = "1px solid red";
             }
 
@@ -161,10 +170,10 @@ function controlFields()
 let BMObject = chrome.bookmarks.getTree();
 BMObject.then(getItems, handleError)
         .then(writeHTML,handleError)
-        .then(controlFields, handleError);
+        .then(controlFields, handleError)
+        .catch(e => {
+    console.log(e);
+});
 
-
-
-console.log(selectItemsHTML)
 
 
