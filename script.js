@@ -121,7 +121,6 @@ function clearError()
 
 function controlFields()
 {
-    console.log("In controlfields()")
     const folderOptions = document.getElementById("folder");
     saveButton.addEventListener("click", () => 
     {
@@ -150,6 +149,12 @@ function controlFields()
         }
         else
         {
+            if (!(url.includes("https")) || !(url.includes("http")))
+            {
+                let preFormattedUrl = urlField.value;
+                urlField.value = "http://" + preFormattedUrl;
+                url = urlField.value;
+            }
             addBookmark(parentId, title, url);
         }
         
@@ -170,10 +175,7 @@ function controlFields()
 let BMObject = chrome.bookmarks.getTree();
 BMObject.then(getItems, handleError)
         .then(writeHTML,handleError)
-        .then(controlFields, handleError)
-        .catch(e => {
-    console.log(e);
-});
+        .then(controlFields, handleError);
 
 
 
