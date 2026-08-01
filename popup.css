@@ -20,6 +20,7 @@ html{
     font-family: "VCR-OSD-Mono";
     padding: 1.25rem;
     background-color: var(--main-bg-color);
+    display: flex;
 }
 
 html::selection{
@@ -63,8 +64,12 @@ div{
 .buttons-container{
     display:flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 0.1rem;
+    gap: 5px;
+    align-items: space-between;
+}
+
+.select{
+    width: 100%;
 }
 
 .message{
@@ -95,6 +100,7 @@ select{
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     color: var(--main-fg-color);
+    width: 100%;
 }
 
 select:focus{
@@ -125,4 +131,32 @@ button:hover{
 
 button:active{
     background-color: #f8da80;
+}
+
+.newFolderControls{
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    font-size: 0.8rem;
+}
+
+.newFolderSubmitContainer{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fittedButton{
+    max-width: fit-content;
+}
+
+.folderSelector{
+    display:flex;
+    flex-direction: row;
+    gap: 0.3rem;
 }

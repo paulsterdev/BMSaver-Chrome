@@ -2,10 +2,15 @@
 
 const nameField = document.getElementById("nameField");
 const urlField = document.getElementById("urlField");
-const folderSelector = document.getElementById("folderSelectorMenu")
+const folderSelector = document.getElementById("folder")
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
 const message = document.getElementById("message");
+const newFolderButton = document.getElementById("newFolderButton");
+const newFolderControls = document.getElementById("newFolderControls");
+const newFolderName = document.getElementById("newFolderField");
+const newFolderParentSelector = document.getElementById("parentFolder");
+const submitNewFolderButton = document.getElementById("submitFolder");
 
 const folderNames = [];
 const folderIDs = [];
@@ -74,14 +79,16 @@ function writeHTML(){
     `
     }
     folderSelector.innerHTML = 
-`
-    <label for="folderSelector">FOLDER:</label>
-        <select
-        name="folder"
-        id="folder">
+`    
         ${selectItemsHTML}
-        </select>
 `;
+}
+
+function unhideFolderControls(){
+    newFolderControls.style.removeProperty("display");
+}
+function hideFolderControls(){
+    newFolderControls.style.display = "none";
 }
 
 function addBookmark(parentId, title, url)
@@ -122,6 +129,21 @@ function clearError()
 function controlFields()
 {
     const folderOptions = document.getElementById("folder");
+    newFolderButton.addEventListener("click", () =>
+    {
+        unhideFolderControls();
+        newFolderParentSelector.innerHTML = 
+        `
+            ${selectItemsHTML};
+        `
+        submitNewFolderButton.addEventListener("click", () =>
+        {
+            console.log("Submit button clicked.");
+        }
+    )
+    }
+    )
+
     saveButton.addEventListener("click", () => 
     {
         var title = nameField.value;
@@ -149,7 +171,7 @@ function controlFields()
         }
         else
         {
-            if (!(url.includes("https")) || !(url.includes("http")))
+            if (!(url.includes("https://")) && !(url.includes("http://")))
             {
                 let preFormattedUrl = urlField.value;
                 urlField.value = "http://" + preFormattedUrl;
