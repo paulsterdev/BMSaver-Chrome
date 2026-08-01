@@ -5,7 +5,7 @@ const urlField = document.getElementById("urlField");
 const folderSelector = document.getElementById("folderSelectorMenu")
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
-const message = document.getElementById("error");
+const message = document.getElementById("message");
 
 const folderNames = [];
 const folderIDs = [];
