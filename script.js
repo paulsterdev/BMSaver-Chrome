@@ -85,7 +85,7 @@ function writeHTML(){
 }
 
 function unhideFolderControls(){
-    newFolderControls.style.removeProperty("display");
+    newFolderControls.style.display = "";
 }
 function hideFolderControls(){
     newFolderControls.style.display = "none";
@@ -94,9 +94,17 @@ function hideFolderControls(){
 function addBookmark(parentId, title, url)
 {
     clearError();
-    console.log(parentId)
+    console.log(parentId);
     let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
     newBookmark.catch(error => catchError(error));
+}
+
+function addFolder(folderName, parentFolder)
+{
+    clearError();
+    let newFolder = chrome.bookmarks.create({'parentId':parentFolder,'title': folderName});
+    newFolder.catch(error => catchError(error));
+    getItems();
 }
 
 function displayMessage(errorText, messageColor)
@@ -138,7 +146,17 @@ function controlFields()
         `
         submitNewFolderButton.addEventListener("click", () =>
         {
-            console.log("Submit button clicked.");
+            if(newFolderName.value == "")
+            {
+                newFolderName.style.border = "1px solid red"
+                displayMessage("FOLDER NAME MUST NOT BE EMPTY", "red");
+            }
+            else
+            {
+                var folderName = newFolderName.value;
+                var parentFolder = newFolderParentSelector.value;
+                addFolder(folderName, parentFolder);
+            }
         }
     )
     }
