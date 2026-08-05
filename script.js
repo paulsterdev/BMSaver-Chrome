@@ -1,5 +1,4 @@
 
-
 const nameField = document.getElementById("nameField");
 const urlField = document.getElementById("urlField");
 const folderSelector = document.getElementById("folder")
@@ -12,8 +11,8 @@ const newFolderName = document.getElementById("newFolderField");
 const newFolderParentSelector = document.getElementById("parentFolder");
 const submitNewFolderButton = document.getElementById("submitFolder");
 
-const folderNames = [];
-const folderIDs = [];
+var folderNames = [];
+var folderIDs = [];
 var folderID = "";
 var folderName = ``;
 var selectItemsHTML = ``;
@@ -68,7 +67,10 @@ function updateFolders(bookmarkItem)
 
 function getItems(bookmarkItems) 
 {
-  updateFolders(bookmarkItems[0]);
+    selectItemsHTML = ``;
+    folderNames = [];
+    folderIDs = [];
+    updateFolders(bookmarkItems[0]);
 }
 
 function writeHTML(){
@@ -104,7 +106,9 @@ function addFolder(folderName, parentFolder)
     clearError();
     let newFolder = chrome.bookmarks.create({'parentId':parentFolder,'title': folderName});
     newFolder.catch(error => catchError(error));
-    getItems();
+    startUp();
+    hideFolderControls();
+    controlFields();
 }
 
 function displayMessage(errorText, messageColor)
@@ -134,18 +138,20 @@ function clearError()
     urlField.style.border = "1px solid black";
 }
 
-function controlFields()
+const newFolderButtonClickAction = () => 
 {
-    const folderOptions = document.getElementById("folder");
-    newFolderButton.addEventListener("click", () =>
-    {
+        newFolderButton.removeEventListener("click", newFolderButtonClickAction);
         unhideFolderControls();
         newFolderParentSelector.innerHTML = 
         `
             ${selectItemsHTML};
         `
-        submitNewFolderButton.addEventListener("click", () =>
-        {
+        submitNewFolderButton.addEventListener("click", submitNewFolderButtonAction);  
+}
+
+const submitNewFolderButtonAction = () =>
+{
+        submitNewFolderButton.removeEventListener("click", submitNewFolderButtonAction);
             if(newFolderName.value == "")
             {
                 newFolderName.style.border = "1px solid red"
@@ -157,65 +163,75 @@ function controlFields()
                 var parentFolder = newFolderParentSelector.value;
                 addFolder(folderName, parentFolder);
             }
-        }
-    )
-    }
-    )
+}
 
-    saveButton.addEventListener("click", () => 
+const saveButtonAction = () =>
+{
+    saveButton.removeEventListener("click", saveButtonAction);
+    var title = nameField.value;
+    var url = urlField.value;
+    var parentId = folderSelector.value;
+    if(!title || !url)
     {
-        var title = nameField.value;
-        var url = urlField.value;
-        var parentId = folderOptions.value;
-        if(!title || !url)
+        if (!title && !url)
         {
-            if (!title && !url)
-            {
-                nameField.style.border = "1px solid red";
-                urlField.style.border = "1px solid red";
-                displayMessage("NAME AND URL CANNOT BE BLANK.", "red")
-            }
-            else if(!title)
-            {
-                nameField.style.border = "1px solid red";
-                displayMessage("NAME CANNOT BE BLANK.", "red");
-            }
-            else if(!url)
-            {
-                displayMessage("URL CANNOT BE BLANK.", "red");
-                urlField.style.border = "1px solid red";
-            }
+            nameField.style.border = "1px solid red";
+            urlField.style.border = "1px solid red";
+            displayMessage("NAME AND URL CANNOT BE BLANK.", "red")
+        }
+        else if(!title)
+        {
+            nameField.style.border = "1px solid red";
+            displayMessage("NAME CANNOT BE BLANK.", "red");
+        }
+        else if(!url)
+        {
+            displayMessage("URL CANNOT BE BLANK.", "red");
+            urlField.style.border = "1px solid red";
+        }
 
-        }
-        else
-        {
-            if (!(url.includes("https://")) && !(url.includes("http://")))
-            {
-                let preFormattedUrl = urlField.value;
-                urlField.value = "http://" + preFormattedUrl;
-                url = urlField.value;
-            }
-            addBookmark(parentId, title, url);
-        }
-        
     }
-    )
-
-    clearButton.addEventListener("click", () => 
+    else
     {
+        if (!(url.includes("https://")) && !(url.includes("http://")))
+        {
+            let preFormattedUrl = urlField.value;
+            urlField.value = "http://" + preFormattedUrl;
+            url = urlField.value;
+        }
+        addBookmark(parentId, title, url);
+    }
+    controlFields();
+}
+
+
+const clearButtonAction = () =>
+{
+        clearButton.removeEventListener("click", clearButtonAction);
         clearError();
         nameField.value = "";
         urlField.value = "";
-        folderOptions.selectedIndex = 0;
+        folderSelector.selectedIndex = 0;
         controlFields();
-    }
-    )
 }
 
-let BMObject = chrome.bookmarks.getTree();
-BMObject.then(getItems, handleError)
-        .then(writeHTML,handleError)
-        .then(controlFields, handleError);
+function controlFields()
+{
+    newFolderButton.addEventListener("click", newFolderButtonClickAction);
+    saveButton.addEventListener("click", saveButtonAction);
+    clearButton.addEventListener("click", clearButtonAction);
+    
+}
+
+function startUp(){
+    let BMObject = chrome.bookmarks.getTree();
+    BMObject.then(getItems, handleError)
+            .then(writeHTML,handleError)
+            .then(controlFields, handleError);
+}
+
+startUp();
+
 
 
 
