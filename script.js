@@ -138,7 +138,7 @@ function clearError()
     urlField.style.border = "1px solid black";
 }
 
-const newFolderButtonClickAction = () => 
+function newFolderButtonClickAction() 
 {
         newFolderButton.removeEventListener("click", newFolderButtonClickAction);
         unhideFolderControls();
@@ -156,6 +156,7 @@ const submitNewFolderButtonAction = () =>
             {
                 newFolderName.style.border = "1px solid red"
                 displayMessage("FOLDER NAME MUST NOT BE EMPTY", "red");
+                newFolderButtonClickAction();
             }
             else
             {

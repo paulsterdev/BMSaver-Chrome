@@ -20,7 +20,8 @@ html{
     font-family: "VCR-OSD-Mono";
     padding: 1.25rem;
     background-color: var(--main-bg-color);
-    display: flex;
+    flex: 1;
+
 }
 
 html::selection{
@@ -38,7 +39,7 @@ h1{
     font-weight: 300;
     text-align:left;
     font-size: 1.25rem;
-    color: var(--main-fg-color)
+    color: var(--main-fg-color);
 }
 body{
     display:flex;
@@ -46,6 +47,9 @@ body{
     background: none;
     align-items: left;
     min-width: 20rem;
+    height: fit-content;
+    flex-grow: 2;
+    flex-shrink: 2;
 }
 
 div{
@@ -146,9 +150,10 @@ button:active{
 
 .newFolderSubmitContainer{
     display:flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    gap: 0.9rem;
 }
 
 .fittedButton{
