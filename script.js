@@ -10,6 +10,7 @@ const newFolderControls = document.getElementById("newFolderControls");
 const newFolderName = document.getElementById("newFolderField");
 const newFolderParentSelector = document.getElementById("parentFolder");
 const submitNewFolderButton = document.getElementById("submitFolder");
+const CancelNewFolderButton = document.getElementById("cancelFolder");
 
 var folderNames = [];
 var folderIDs = [];
@@ -146,7 +147,16 @@ function newFolderButtonClickAction()
         `
             ${selectItemsHTML};
         `
-        submitNewFolderButton.addEventListener("click", submitNewFolderButtonAction);  
+        submitNewFolderButton.addEventListener("click", submitNewFolderButtonAction);
+        CancelNewFolderButton.addEventListener("click", cancelNewFolderButtonAction);  
+}
+
+const cancelNewFolderButtonAction = () =>
+{
+    clearError();
+    hideFolderControls();
+    controlFields();
+
 }
 
 const submitNewFolderButtonAction = () =>
