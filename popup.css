@@ -157,7 +157,7 @@ button:active{
 }
 
 .fittedButton{
-    max-width: fit-content;
+    min-width: 78px;
 }
 
 .folderSelector{
