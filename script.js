@@ -19,11 +19,11 @@ var folderName = ``;
 var selectItemsHTML = ``;
 
 
-
 function handleError(error)
 {
     console.error(`Error occured: ${error}`);
 }
+
 
 function updateFolders(bookmarkItem) 
 {
@@ -66,6 +66,7 @@ function updateFolders(bookmarkItem)
     
     }  
 
+
 function getItems(bookmarkItems) 
 {
     selectItemsHTML = ``;
@@ -74,7 +75,9 @@ function getItems(bookmarkItems)
     updateFolders(bookmarkItems[0]);
 }
 
-function writeHTML(){
+
+function writeHTML()
+{
     for (var i = 0; i < folderNames.length; i++)
     {
     selectItemsHTML += 
@@ -87,36 +90,13 @@ function writeHTML(){
 `;
 }
 
-function unhideFolderControls(){
-    newFolderControls.style.display = "";
-}
-function hideFolderControls(){
-    newFolderControls.style.display = "none";
-}
-
-function addBookmark(parentId, title, url)
-{
-    clearError();
-    console.log(parentId);
-    let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
-    newBookmark.catch(error => catchError(error));
-}
-
-function addFolder(folderName, parentFolder)
-{
-    clearError();
-    let newFolder = chrome.bookmarks.create({'parentId':parentFolder,'title': folderName});
-    newFolder.catch(error => catchError(error));
-    startUp();
-    hideFolderControls();
-    controlFields();
-}
 
 function displayMessage(errorText, messageColor)
 {
     message.style.color = messageColor;
-    message.innerHTML = `${errorText}`;
+    message.innerHTML += `<p>${errorText}</p>`;
 }
+
 
 function catchError(error)
 {
@@ -132,12 +112,64 @@ function catchError(error)
     }
 }
 
+
 function clearError()
 {
     message.innerHTML = ``;
     nameField.style.border = "1px solid black";
     urlField.style.border = "1px solid black";
 }
+
+
+const cancelNewFolderButtonAction = () =>
+{
+    clearError();
+    hideFolderControls();
+    controlFields();
+
+}
+
+
+function addFolder(folderName, parentFolder)
+{
+    clearError();
+    let newFolder = chrome.bookmarks.create({'parentId':parentFolder,'title': folderName});
+    newFolder.catch(error => catchError(error));
+    loadBMObject();
+    hideFolderControls();
+    controlFields();
+}
+
+
+const submitNewFolderButtonAction = () =>
+{
+        submitNewFolderButton.removeEventListener("click", submitNewFolderButtonAction);
+            if(newFolderName.value == "")
+            {
+                newFolderName.style.border = "1px solid red"
+                displayMessage("FOLDER NAME MUST NOT BE EMPTY.", "red");
+                newFolderButtonClickAction();
+            }
+            else
+            {
+                var folderName = newFolderName.value;
+                var parentFolder = newFolderParentSelector.value;
+                addFolder(folderName, parentFolder);
+            }
+}
+
+
+function unhideFolderControls()
+{
+    newFolderControls.style.display = "";
+}
+
+
+function hideFolderControls()
+{
+    newFolderControls.style.display = "none";
+}
+
 
 function newFolderButtonClickAction() 
 {
@@ -151,30 +183,15 @@ function newFolderButtonClickAction()
         CancelNewFolderButton.addEventListener("click", cancelNewFolderButtonAction);  
 }
 
-const cancelNewFolderButtonAction = () =>
+
+function addBookmark(parentId, title, url)
 {
     clearError();
-    hideFolderControls();
-    controlFields();
-
+    console.log(parentId);
+    let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
+    newBookmark.catch(error => catchError(error));
 }
 
-const submitNewFolderButtonAction = () =>
-{
-        submitNewFolderButton.removeEventListener("click", submitNewFolderButtonAction);
-            if(newFolderName.value == "")
-            {
-                newFolderName.style.border = "1px solid red"
-                displayMessage("FOLDER NAME MUST NOT BE EMPTY", "red");
-                newFolderButtonClickAction();
-            }
-            else
-            {
-                var folderName = newFolderName.value;
-                var parentFolder = newFolderParentSelector.value;
-                addFolder(folderName, parentFolder);
-            }
-}
 
 const saveButtonAction = () =>
 {
@@ -226,6 +243,7 @@ const clearButtonAction = () =>
         controlFields();
 }
 
+
 function controlFields()
 {
     newFolderButton.addEventListener("click", newFolderButtonClickAction);
@@ -234,14 +252,16 @@ function controlFields()
     
 }
 
-function startUp(){
+
+function loadBMObject(){
     let BMObject = chrome.bookmarks.getTree();
     BMObject.then(getItems, handleError)
             .then(writeHTML,handleError)
             .then(controlFields, handleError);
 }
 
-startUp();
+
+loadBMObject();
 
 
 

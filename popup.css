@@ -165,3 +165,7 @@ button:active{
     flex-direction: row;
     gap: 0.3rem;
 }
+
+p{
+    margin: 1%;  
+}
