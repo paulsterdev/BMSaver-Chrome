@@ -18,13 +18,13 @@ var folderID = "";
 var folderName = ``;
 var selectItemsHTML = ``;
 
-
+// General error handling function
 function handleError(error)
 {
     console.error(`Error occured: ${error}`);
 }
 
-
+// Adds folder names and folder IDs into array for folder selector menu poopulation
 function updateFolders(bookmarkItem) 
 {
     if (!(bookmarkItem.url) && (bookmarkItem.title))
@@ -66,7 +66,7 @@ function updateFolders(bookmarkItem)
     
     }  
 
-
+// Passes bookmark tree into updateFolders
 function getItems(bookmarkItems) 
 {
     selectItemsHTML = ``;
@@ -75,7 +75,7 @@ function getItems(bookmarkItems)
     updateFolders(bookmarkItems[0]);
 }
 
-
+// Populates folder selector menu using the data collected by updateFolders
 function writeHTML()
 {
     for (var i = 0; i < folderNames.length; i++)
@@ -90,14 +90,18 @@ function writeHTML()
 `;
 }
 
-
+// Prints error, success messages to the popup
 function displayMessage(errorText, messageColor)
 {
     message.style.color = messageColor;
-    message.innerHTML += `<p>${errorText}</p>`;
+    if (!(message.innerHTML.includes(errorText)))
+    {
+        message.innerHTML += `<p>${errorText}</p>`;
+    }
+    
 }
 
-
+// General error catching function for uncaught errors
 function catchError(error)
 {
     if (error == "Error: Invalid URL.")
@@ -112,7 +116,7 @@ function catchError(error)
     }
 }
 
-
+// Clears currently displayed messages from popup
 function clearError()
 {
     message.innerHTML = ``;
@@ -120,7 +124,7 @@ function clearError()
     urlField.style.border = "1px solid black";
 }
 
-
+// Hides folder controls and clears active messages when folder creation is canceled
 const cancelNewFolderButtonAction = () =>
 {
     clearError();
@@ -129,7 +133,7 @@ const cancelNewFolderButtonAction = () =>
 
 }
 
-
+// Creates folder and recalls function sequence
 function addFolder(folderName, parentFolder)
 {
     clearError();
@@ -140,7 +144,7 @@ function addFolder(folderName, parentFolder)
     controlFields();
 }
 
-
+// Checks folder data submission data for errors, then calls addFolder if everything's good
 const submitNewFolderButtonAction = () =>
 {
         submitNewFolderButton.removeEventListener("click", submitNewFolderButtonAction);
@@ -158,19 +162,19 @@ const submitNewFolderButtonAction = () =>
             }
 }
 
-
+// Unhides folder creation controls
 function unhideFolderControls()
 {
     newFolderControls.style.display = "";
 }
 
-
+// Hides folder creation controls
 function hideFolderControls()
 {
     newFolderControls.style.display = "none";
 }
 
-
+// Unhides folder controls, populates parent folder selector menu
 function newFolderButtonClickAction() 
 {
         newFolderButton.removeEventListener("click", newFolderButtonClickAction);
@@ -183,16 +187,17 @@ function newFolderButtonClickAction()
         CancelNewFolderButton.addEventListener("click", cancelNewFolderButtonAction);  
 }
 
-
+// Adds a new bookmark
 function addBookmark(parentId, title, url)
 {
     clearError();
     console.log(parentId);
     let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
     newBookmark.catch(error => catchError(error));
+    displayMessage(`SAVED "${title.toUpperCase()}".`,"#290000");
 }
 
-
+// Looks for errors in submitted bookmark info, then calls addBookmark if everything's good
 const saveButtonAction = () =>
 {
     saveButton.removeEventListener("click", saveButtonAction);
@@ -232,7 +237,7 @@ const saveButtonAction = () =>
     controlFields();
 }
 
-
+// Clears message(s) and populated bookmark fields
 const clearButtonAction = () =>
 {
         clearButton.removeEventListener("click", clearButtonAction);
@@ -243,7 +248,7 @@ const clearButtonAction = () =>
         controlFields();
 }
 
-
+// Main "hub" controlling what each button does
 function controlFields()
 {
     newFolderButton.addEventListener("click", newFolderButtonClickAction);
@@ -252,7 +257,7 @@ function controlFields()
     
 }
 
-
+// Starts up the bookmark tree parsing and dropdown menu population systems
 function loadBMObject(){
     let BMObject = chrome.bookmarks.getTree();
     BMObject.then(getItems, handleError)
