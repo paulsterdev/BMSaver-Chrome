@@ -91,12 +91,13 @@ function writeHTML()
 }
 
 // Prints error, success messages to the popup
-function displayMessage(errorText, messageColor)
+function displayMessage(messageText, messageColor)
 {
+    clearMessage();
     message.style.color = messageColor;
-    if (!(message.innerHTML.includes(errorText)))
+    if (!(message.innerHTML.includes(messageText)))
     {
-        message.innerHTML += `<p>${errorText}</p>`;
+        message.innerHTML += `<p>${messageText}</p>`;
     }
     
 }
@@ -117,7 +118,7 @@ function catchError(error)
 }
 
 // Clears currently displayed messages from popup
-function clearError()
+function clearMessage()
 {
     message.innerHTML = ``;
     nameField.style.border = "1px solid black";
@@ -127,7 +128,7 @@ function clearError()
 // Hides folder controls and clears active messages when folder creation is canceled
 const cancelNewFolderButtonAction = () =>
 {
-    clearError();
+    clearMessage();
     hideFolderControls();
     controlFields();
 
@@ -136,12 +137,12 @@ const cancelNewFolderButtonAction = () =>
 // Creates folder and recalls function sequence
 function addFolder(folderName, parentFolder)
 {
-    clearError();
+    clearMessage();
     let newFolder = chrome.bookmarks.create({'parentId':parentFolder,'title': folderName});
     newFolder.catch(error => catchError(error));
-    loadBMObject();
+    displayMessage(`SAVED "${folderName.toUpperCase()}".`,"#290000");
     hideFolderControls();
-    controlFields();
+    loadBMObject();
 }
 
 // Checks folder data submission data for errors, then calls addFolder if everything's good
@@ -190,7 +191,7 @@ function newFolderButtonClickAction()
 // Adds a new bookmark
 function addBookmark(parentId, title, url)
 {
-    clearError();
+    clearMessage();
     console.log(parentId);
     let newBookmark = chrome.bookmarks.create({'parentId': parentId,'title': title,'url': url,});
     newBookmark.catch(error => catchError(error));
@@ -224,6 +225,11 @@ const saveButtonAction = () =>
         }
 
     }
+    else if ((!(url.substr(url.length - 1).match(/[a-z]/i))) && ((url.substr(url.length - 1) != '/')))
+    {
+        displayMessage("URL FORMAT INVALID.", "red");
+        urlField.style.border = "1px solid red";
+    }
     else
     {
         if (!(url.includes("https://")) && !(url.includes("http://")))
@@ -241,7 +247,7 @@ const saveButtonAction = () =>
 const clearButtonAction = () =>
 {
         clearButton.removeEventListener("click", clearButtonAction);
-        clearError();
+        clearMessage();
         nameField.value = "";
         urlField.value = "";
         folderSelector.selectedIndex = 0;
